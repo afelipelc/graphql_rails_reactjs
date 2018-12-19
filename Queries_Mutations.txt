@@ -1,0 +1,46 @@
+mutation {
+  createPost(input: {
+    title: "New Felipe post",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+  }) {
+    post{
+      id,
+      title
+    }
+  }
+}
+
+
+mutation {
+  createUser(input: {
+    name: "Felipe",
+    authProvider: {
+      email: "felipe@gmail.com",
+    	password: "123"
+    }
+  }) {
+    user{
+      id,
+      name
+      email
+    }
+  }
+}
+
+
+mutation {
+  signInUser(input: {
+    auth: {
+      email: "felipe@gmail.com",
+    	password: "123"
+    }
+  }) {
+    authUser {
+      token,
+      user {
+        id,
+        email
+      }
+    }
+  } 
+}
