@@ -1,14 +1,14 @@
 class GraphqlController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  #skip_before_action :verify_authenticity_token
 
-  
   def execute
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
     context = {
       # Query context goes here, for example:
-      # current_user: current_user,
+      current_user: current_user,
+      session: session,
     }
     result = ReactGraphqlSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
@@ -18,6 +18,24 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  # handle current user if token exists
+  # later in types can use contex[:current_user] for get user
+  def current_user
+    # if we want to change the sign-in strategy, this is the place to do it
+    return unless session[:token]
+
+    # For Ruby on Rails >=5.2.x use:
+    # crypt = ActiveSupport::MessageEncryptor.new(Rails.application.credentials.secret_key_base.byteslice(0..31))
+    crypt = ActiveSupport::MessageEncryptor.new(Rails.application.credentials.secret_key_base.byteslice(0..31))
+    token = crypt.decrypt_and_verify session[:token]
+    user_id = token.gsub('user-id:', '').to_i
+    User.find_by id: user_id
+
+    rescue ActiveSupport::MessageVerifier::InvalidSignature
+    nil
+  end
+  # end handle auth
 
   # Handle form data, JSON body, or a blank value
   def ensure_hash(ambiguous_param)

@@ -40,6 +40,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 # Added by afelipe
 gem 'graphql'
+gem 'bcrypt', '~> 3.1.7'
 
 
 group :development, :test do

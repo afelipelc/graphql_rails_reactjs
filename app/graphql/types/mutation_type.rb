@@ -1,5 +1,6 @@
 module Types
   class MutationType < GraphQL::Schema::Object
+    field :signInUser, mutation: Mutations::SignInUser
     field :createUser, mutation: Mutations::CreateUser
     field :createPost, mutation: Mutations::CreatePost
     #field :deleteComment, mutation: Mutations::DeleteComment
